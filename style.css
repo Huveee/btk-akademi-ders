@@ -1,0 +1,338 @@
+/* Modern Cyberpunk / Dark Glassmorphism Tetris Stili */
+:root {
+    --bg-color: #080a0f;
+    --card-bg: rgba(18, 24, 38, 0.75);
+    --card-border: rgba(0, 240, 255, 0.18);
+    --card-glow: rgba(0, 240, 255, 0.12);
+    --text-primary: #ffffff;
+    --text-secondary: #94a3b8;
+    --accent-cyan: #00f0ff;
+    --accent-magenta: #d500f9;
+    --accent-yellow: #ffd600;
+    --accent-green: #00e676;
+    --accent-red: #ff1744;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+body {
+    background-color: var(--bg-color);
+    background-image: 
+        radial-gradient(circle at 20% 20%, rgba(213, 0, 249, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 80% 80%, rgba(0, 240, 255, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.4) 0%, #06080c 100%);
+    color: var(--text-primary);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden;
+    padding: 10px;
+}
+
+/* Başlık */
+.header {
+    text-align: center;
+    margin-bottom: 12px;
+}
+
+.title {
+    font-size: 2.2rem;
+    font-weight: 900;
+    letter-spacing: 4px;
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 25px rgba(0, 240, 255, 0.4);
+    text-transform: uppercase;
+}
+
+.subtitle {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    letter-spacing: 2px;
+    margin-top: 2px;
+}
+
+/* Oyun Düzeni */
+.game-container {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+    justify-content: center;
+    max-width: 900px;
+    position: relative;
+}
+
+/* Yan Paneller */
+.side-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 145px;
+}
+
+.panel-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), inset 0 0 15px var(--card-glow);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.card-title {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.stat-value {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+.stat-value.highlight {
+    color: var(--accent-cyan);
+    text-shadow: 0 0 12px rgba(0, 240, 255, 0.5);
+}
+
+.stat-value.gold {
+    color: var(--accent-yellow);
+    text-shadow: 0 0 12px rgba(255, 214, 0, 0.5);
+}
+
+/* Mini Önizleme Tuvali (Hold & Next) */
+.preview-canvas {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Ana Oyun Tuvali */
+.board-wrapper {
+    position: relative;
+    border-radius: 14px;
+    padding: 4px;
+    background: linear-gradient(135deg, rgba(0, 240, 255, 0.4), rgba(213, 0, 249, 0.4));
+    box-shadow: 0 0 35px rgba(0, 240, 255, 0.25), 0 15px 35px rgba(0, 0, 0, 0.6);
+}
+
+#board {
+    display: block;
+    background-color: #0b0e14;
+    border-radius: 10px;
+}
+
+/* Overlay & Modallar */
+.overlay-modal {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    right: 4px;
+    bottom: 4px;
+    background: rgba(8, 10, 15, 0.88);
+    backdrop-filter: blur(8px);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    z-index: 50;
+    text-align: center;
+    padding: 20px;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.overlay-modal.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.modal-title {
+    font-size: 2rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+}
+
+.modal-title.red {
+    color: var(--accent-red);
+    text-shadow: 0 0 20px rgba(255, 23, 68, 0.6);
+}
+
+.modal-title.cyan {
+    color: var(--accent-cyan);
+    text-shadow: 0 0 20px rgba(0, 240, 255, 0.6);
+}
+
+.modal-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+}
+
+.modal-stats span b {
+    color: #fff;
+    font-size: 1.1rem;
+}
+
+/* Butonlar */
+.btn {
+    background: linear-gradient(135deg, var(--accent-cyan), #009bb3);
+    color: #000;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 22px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 240, 255, 0.3);
+    transition: all 0.2s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 240, 255, 0.5);
+    filter: brightness(1.1);
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-primary);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: none;
+    font-size: 0.78rem;
+    padding: 6px 10px;
+    width: 100%;
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+}
+
+/* Kontrol Açıklamaları */
+.controls-card {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    width: 100%;
+}
+
+.key-pill {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--accent-cyan);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-weight: 700;
+    font-family: monospace;
+    font-size: 0.72rem;
+    border: 1px solid rgba(0, 240, 255, 0.25);
+}
+
+/* Mobil / Dokunmatik Butonlar */
+.touch-controls {
+    margin-top: 14px;
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    max-width: 360px;
+}
+
+.touch-row {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.t-btn {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 800;
+    padding: 12px;
+    border-radius: 10px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: manipulation;
+    transition: background 0.1s, transform 0.1s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.t-btn:active {
+    background: rgba(0, 240, 255, 0.25);
+    transform: scale(0.95);
+}
+
+.t-btn.large {
+    flex: 1.5;
+    background: rgba(0, 240, 255, 0.15);
+    border-color: var(--accent-cyan);
+}
+
+/* Responsive Düzen */
+@media (max-width: 680px) {
+    .game-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .side-panel {
+        flex-direction: row;
+        width: 100%;
+        max-width: 310px;
+        justify-content: space-between;
+    }
+
+    .side-panel.controls-panel {
+        display: none;
+    }
+
+    .touch-controls {
+        display: flex;
+    }
+
+    .title {
+        font-size: 1.8rem;
+    }
+
+    #board {
+        width: 270px;
+        height: 540px;
+    }
+
+    .board-wrapper {
+        padding: 3px;
+    }
+}
+

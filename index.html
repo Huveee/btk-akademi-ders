@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Neon Tetris - Web Oyunu</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%2300f0ff'/><rect x='25' y='25' width='50' height='50' fill='%23080a0f'/></svg>">
+</head>
+<body>
+
+    <header class="header">
+        <h1 class="title">NEON TETRIS</h1>
+        <p class="subtitle">RETRO ARCADE EDITION</p>
+    </header>
+
+    <main class="game-container">
+        <!-- Sol Panel: Bekletme (Hold) & İstatistikler -->
+        <aside class="side-panel">
+            <div class="panel-card">
+                <span class="card-title">BEKLET (HOLD)</span>
+                <canvas id="hold-canvas" class="preview-canvas" width="100" height="80"></canvas>
+            </div>
+
+            <div class="panel-card">
+                <span class="card-title">PUAN</span>
+                <span id="score" class="stat-value highlight">0</span>
+            </div>
+
+            <div class="panel-card">
+                <span class="card-title">EN YÜKSEK</span>
+                <span id="high-score" class="stat-value gold">0</span>
+            </div>
+
+            <div class="panel-card">
+                <span class="card-title">SEVİYE</span>
+                <span id="level" class="stat-value">1</span>
+            </div>
+
+            <div class="panel-card">
+                <span class="card-title">SATIR</span>
+                <span id="lines" class="stat-value">0</span>
+            </div>
+        </aside>
+
+        <!-- Orta Panel: Oyun Alanı ve Modallar -->
+        <section class="board-wrapper">
+            <canvas id="board" width="300" height="600"></canvas>
+
+            <!-- Başlangıç Ekranı -->
+            <div id="start-overlay" class="overlay-modal">
+                <h2 class="modal-title cyan">NEON TETRIS</h2>
+                <p style="color: #94a3b8; font-size: 0.85rem; max-width: 220px; line-height: 1.4;">
+                    Klasik Tetris deneyimi, chiptune müzik ve modern görsel efektlerle!
+                </p>
+                <button id="start-btn" class="btn">OYUNA BAŞLA</button>
+            </div>
+
+            <!-- Duraklatma Ekranı -->
+            <div id="pause-modal" class="overlay-modal hidden">
+                <h2 class="modal-title cyan">DURAKLATILDI</h2>
+                <p style="color: #94a3b8; font-size: 0.85rem;">Devam etmek için P veya butona basınız</p>
+                <button id="resume-btn" class="btn">DEVAM ET</button>
+            </div>
+
+            <!-- Oyun Bitti Ekranı -->
+            <div id="game-over-modal" class="overlay-modal hidden">
+                <h2 class="modal-title red">OYUN BİTTİ</h2>
+                <div class="modal-stats">
+                    <span>Skor: <b id="final-score">0</b></span>
+                    <span>Temizlenen Satır: <b id="final-lines">0</b></span>
+                    <span>En Yüksek Skor: <b id="gameover-highscore">0</b></span>
+                </div>
+                <button id="restart-btn" class="btn">YENİDEN BAŞLA</button>
+            </div>
+        </section>
+
+        <!-- Sağ Panel: Sonraki Parça & Kontroller -->
+        <aside class="side-panel controls-panel">
+            <div class="panel-card">
+                <span class="card-title">SONRAKİ</span>
+                <canvas id="next-canvas" class="preview-canvas" width="100" height="80"></canvas>
+            </div>
+
+            <div class="panel-card">
+                <span class="card-title">SES AYARLARI</span>
+                <button id="btn-music" class="btn btn-secondary" style="margin-bottom: 6px;">🎵 Müzik: Açık</button>
+                <button id="btn-sound" class="btn btn-secondary">🔊 Ses: Açık</button>
+            </div>
+
+            <div class="panel-card controls-card">
+                <span class="card-title">KONTROLLER</span>
+                <div><span class="key-pill">◄</span> <span class="key-pill">►</span> : Sağa / Sola</div>
+                <div><span class="key-pill">▲</span> / <span class="key-pill">W</span> / <span class="key-pill">X</span> : Döndür</div>
+                <div><span class="key-pill">▼</span> / <span class="key-pill">S</span> : Hızlı İndir</div>
+                <div><span class="key-pill">SPACE</span> : Anında Düşür</div>
+                <div><span class="key-pill">C</span> / <span class="key-pill">SHIFT</span> : Beklet</div>
+                <div><span class="key-pill">P</span> : Duraklat</div>
+                <div><span class="key-pill">M</span> : Müziği Kapat</div>
+            </div>
+        </aside>
+    </main>
+
+    <!-- Mobil / Dokunmatik Kontroller -->
+    <nav class="touch-controls" aria-label="Oyun Kontrolleri">
+        <div class="touch-row">
+            <button id="ctrl-hold" class="t-btn" title="Beklet">🔄 TUT</button>
+            <button id="ctrl-rotate" class="t-btn large" title="Döndür">↻ DÖNDÜR</button>
+            <button id="ctrl-harddrop" class="t-btn" title="Düşür">⚡ DÜŞÜR</button>
+        </div>
+        <div class="touch-row">
+            <button id="ctrl-left" class="t-btn" title="Sola">◄</button>
+            <button id="ctrl-down" class="t-btn" title="Aşağı">▼</button>
+            <button id="ctrl-right" class="t-btn" title="Sağa">►</button>
+        </div>
+    </nav>
+
+    <!-- Oyun Scriptleri -->
+    <script src="sound.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
+
